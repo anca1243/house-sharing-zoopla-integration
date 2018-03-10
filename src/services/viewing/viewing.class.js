@@ -1,26 +1,29 @@
 /* eslint-disable no-unused-vars */
 const request = require('request-promise');
 
+
 class Service {
   constructor (options) {
     this.options = options || {};
   }
 
   async find (params) {
-    var propertiesObject = params.query;
-    propertiesObject.api_key ="2mga32kehjcckky5rhe36hnt";
-    var url = 'http://api.zoopla.co.uk/api/v1/property_listings.json'
-    return request({url:url, qs:propertiesObject})
-      .then(response, err=>{
-        if(err) {
-          console.log(err);
-          return JSON.parse(err);
-        }
-        console.log("Get response: " + response);
-        return JSON.parse(response);
+    console.log(params)
+    var sessionParams = {api_key: '2mga32kehjcckky5rhe36hnt'};
+    var sessionUrl = 'https://api.zoopla.co.uk/api/v1/get_session_id.json'
+    var viewingUrl = 'https://api.zoopla.co.uk/api/v1/arrange_viewing.json'
+    return request({url:sessionUrl, qs:sessionParams})
+      .then(response=>{
+        var viewingParams = params.query;
+        viewingParams.session_id = response.session_id;
+        viewingParams.api_key = sessionParams.api_key;
+        return request({url:viewingUrl, qs: viewingParams})
+        .then(response=>{
+          console.log("Get response: " + response);
+          return JSON.parse(response);
+        })
       });
-
-}
+  }
 
   async get (id, params) {
     return {
