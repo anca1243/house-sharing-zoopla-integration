@@ -8,18 +8,18 @@ class Service {
   }
 
   async find (params) {
-    console.log(params)
     var sessionParams = {api_key: '2mga32kehjcckky5rhe36hnt'};
     var sessionUrl = 'https://api.zoopla.co.uk/api/v1/get_session_id.json'
     var viewingUrl = 'https://api.zoopla.co.uk/api/v1/arrange_viewing.json'
     return request({url:sessionUrl, qs:sessionParams})
       .then(response=>{
+        response = JSON.parse(response);
         var viewingParams = params.query;
         viewingParams.session_id = response.session_id;
         viewingParams.api_key = sessionParams.api_key;
+        viewingParams.email = 'zoopla_developer@mashery.com';
         return request({url:viewingUrl, qs: viewingParams})
         .then(response=>{
-          console.log("Get response: " + response);
           return JSON.parse(response);
         })
       });
