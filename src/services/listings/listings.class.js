@@ -9,13 +9,17 @@ class Service {
   async find (params) {
     var propertiesObject = params.query;
     propertiesObject.api_key ="2mga32kehjcckky5rhe36hnt";
+    propertiesObject.listing_status ="rent";
+
     var url = 'http://api.zoopla.co.uk/api/v1/property_listings.json'
     return request({url:url, qs:propertiesObject})
       .then((response)=>{
-        return JSON.parse(response);
+        response = JSON.parse(response)
+        let listings = response.listing.slice(0,3);
+        return listings;
       })
       .catch(err=>{
-        return JSON.parse(err);
+        return err;
       })
 
 }
