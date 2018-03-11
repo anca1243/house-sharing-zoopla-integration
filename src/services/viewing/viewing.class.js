@@ -13,15 +13,21 @@ class Service {
     var viewingUrl = 'https://api.zoopla.co.uk/api/v1/arrange_viewing.json'
     return request({url:sessionUrl, qs:sessionParams})
       .then(response=>{
-        response = JSON.parse(response);
+        let responseJSON = JSON.parse(response);
         var viewingParams = params.query;
-        viewingParams.session_id = response.session_id;
+        viewingParams.session_id = responseJSON.session_id;
         viewingParams.api_key = sessionParams.api_key;
         viewingParams.email = 'zoopla_developer@mashery.com';
         return request({url:viewingUrl, qs: viewingParams})
-        .then(response=>{
-          return JSON.parse(response);
+        .then(res=>{
+          return JSON.parse(res);
         })
+        .catch(err=>{
+          return JSON.parse(err);
+        })
+      })
+      .catch(err=>{
+        return JSON.parse(err);
       });
   }
 

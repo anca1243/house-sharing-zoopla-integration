@@ -11,14 +11,12 @@ class Service {
     propertiesObject.api_key ="2mga32kehjcckky5rhe36hnt";
     var url = 'http://api.zoopla.co.uk/api/v1/property_listings.json'
     return request({url:url, qs:propertiesObject})
-      .then(response, err=>{
-        if(err) {
-          console.log(err);
-          return JSON.parse(err);
-        }
-        console.log("Get response: " + response);
+      .then((response)=>{
         return JSON.parse(response);
-      });
+      })
+      .catch(err=>{
+        return JSON.parse(err);
+      })
 
 }
 
